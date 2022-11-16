@@ -8,6 +8,7 @@
 Answer for Q2:
 
 Database Used: sqlite
+schema file: see schema.json
 
 * id - INTEGER (PRIMARY KEY),
 * name - TEXT
