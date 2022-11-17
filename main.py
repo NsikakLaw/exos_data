@@ -8,6 +8,7 @@ with open('schema.json', 'r') as f:
 
 
 def clean_dollar_string(value):
+    # clean dollar column and convert from string to float
     try:
         dollar_float = float(value.replace("$", "").replace(",", ""))
     except Exception as e:
@@ -17,6 +18,8 @@ def clean_dollar_string(value):
 
 
 def convert_csv_to_df(filename):
+    # convert csv to dataframe
+    
     df = pd.read_csv(filename)
     df['average_salary_per_film'] = df.apply(lambda x: clean_dollar_string(x['average_salary_per_film']), axis=1)
     df['birth_date'] = pd.to_datetime(df['birth_date'], errors='coerce')
@@ -25,6 +28,8 @@ def convert_csv_to_df(filename):
 
 
 def create_db_details(table_name, schema, csv_file):
+    # create table and insert data based on schema
+    
     new_db = Database("test.db")
     create_statement = create_sql_statement(table_name, schema)
     new_db.create_table(create_statement)
@@ -39,6 +44,9 @@ def create_db_details(table_name, schema, csv_file):
 
 
 def get_top_deceased_salary(db):
+    
+    # query to get the top 10 deceased actors based on average salary per film
+    
     sql_query = "select name from actors where " \
                 "strftime('%Y',death_date) IS NOT NULL order by average_salary_per_film DESC limit 10;"
 
@@ -50,6 +58,9 @@ def get_top_deceased_salary(db):
 
 
 def get_number_of_cinematographers(db):
+    
+    # find number of actors with cinematography as a profession
+    
     sql_query = "select count(id) from actors where primary_profession like '%cinematographer%';"
     c = db.cursor()
     c.execute(sql_query)
